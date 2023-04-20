@@ -1,0 +1,13 @@
+{
+	"n_targets": 252913,
+	"n_bootstraps": 0,
+	"n_processed": 50724902,
+	"n_pseudoaligned": 46801348,
+	"n_unique": 11447824,
+	"p_pseudoaligned": 92.3,
+	"p_unique": 22.6,
+	"kallisto_version": "0.45.0",
+	"index_version": 10,
+	"start_time": "Wed Apr 19 17:11:19 2023",
+	"call": "kallisto quant -i /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/Hs_ref.kidx -o /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/SRR5088816 --threads 40 /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/SRR5088816_GSM2420262_Pt2_On_AD174046-6_Homo_sapiens_RNA-Seq_1_trimmed.fastq.gz /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/SRR5088816_GSM2420262_Pt2_On_AD174046-6_Homo_sapiens_RNA-Seq_2_trimmed.fastq.gz"
+}
