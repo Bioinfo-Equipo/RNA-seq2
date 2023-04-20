@@ -13,3 +13,177 @@ output:
     theme: lumen
 ---
 
+# Abstract
+
+# Introduction
+
+# Methods
+
+First of all, a new directory in the DNA High-Performance Computing Cluster
+was created, which is
+
+```
+/mnt/Timina/bioinfoII/amarin/RNAseq2/
+```
+
+This directory has the next organization:
+
+```
+|-data/           # Directory to download the raw data
+|-data_trimmed/   # Directory to save the post-QC data
+|-kallisto_out/   # Directory to save the kallisto outputs
+|-QC/             # Directory to perform raw QC
+|-QC_trimmed/     # Directory to perform QC on the trimmed data
+|-scripts/        # Some scripts used to send jobs
+```
+
+
+## Download
+
+The dataset choose to analysis has de GEO Accession 
+[GSE91061](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE91061). 
+Since downloading from the NCBI may be difficult and quite technical, it was 
+choosen to use the European mirror, the 
+[European Nucleotide Archive](https://www.ebi.ac.uk/ena/browser/home) from the
+EMBL-EBI. By browing on the GEO web page, we see that the data are from the 
+BioProject 
+[PRJNA356761](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA356761). We use that
+ID to search on ENA. 
+
+![](images/ENA_screenshot.png)
+
+Due the fact that the are a lot of file needed to be downloaded, we use the 
+web application 
+[SRA Explorer](https://sra-explorer.info/) to get a script to get the bulk
+download.
+
+![](images/SRA-Explorer_screenshot.png)
+We then select all the files and click on "Add to collection". After that, we
+see our saves datasets and select the bash script for downloading FastQ files
+option. We save the script with the name ```downloadScript.sh```, and save it in
+the HPCC, in the ```//data/``` directory.
+
+Then, we send a job using the script. It lasted around 5 days.
+
+
+## Raw Quality Control
+
+Once the data is ready, we perform quality control. We just send a job using 
+fastqc with all the ```fastq``` files via a wildcard:
+
+```
+fastqc /mnt/Timina/bioinfoII/amarin/RNAseq2/data/*fastq.gz -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC
+```
+
+Then, we used multiqc to visualize all the samples at once:
+
+```
+multiqc /mnt/Timina/bioinfoII/amarin/RNAseq2/QC -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC
+```
+
+This allowed us to see some irregularities. First, the first to nucleotides of
+each read had a smaller mean quality score, compared to the rest of the read.
+
+![](QC/raw_mean_quality.png)
+
+Besides, in the heatmap, the base sequence sequence content seemed to be biased
+on the first base pairs of the read.
+
+![](QC/raw_base_content_heatmap.png)
+
+All the samples resembled more or less the next percentage of base content.
+
+![](QC/raw_base_content.png)
+
+Nevertheless, MultiQC didn't detect any adapter content. Based on that, we decided
+to trimm the first 12 nucleotides of each pair.
+
+
+## Trimming
+
+We send a job in the  ```//data/``` directory with a script using the software
+Trimmomatic:
+
+```
+for i in *_1.fastq.gz;
+	do echo
+  	trimmomatic PE -threads 40 -phred33 -trimlog trim.log \
+    	$i "${i%_1.fastq.gz}_2.fastq.gz" \
+    	../data_trimmed/"${i%_1.fastq.gz}_1_trimmed.fastq.gz" \
+    	../data_trimmed/"${i%_1.fastq.gz}_1_unpaired.fastq.gz" \
+    	../data_trimmed/"${i%_1.fastq.gz}_2_trimmed.fastq.gz" \
+    	../data_trimmed/"${i%_1.fastq.gz}_2_unpaired.fastq.gz" \
+    	HEADCROP:12
+  done
+```
+
+Here we just cut the first 12 nucleotides of each read and create a ```trim.log```
+log file by the use of 40 threads. We know that the Phred score are based on 
+ASCII 33 because previously we found a ```#``` symbol on the reads.
+
+This job took a couple of days.
+
+## Trimmed Quality Control
+
+Once the data was trimmed, we did one more time the quality control.
+
+```
+fastqc /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/*fastq.gz -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed
+multiqc /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed
+```
+
+This time, the quality of the first pair bases was better.
+
+![](QC_trimmed/trimmed_quality_mean.png)
+
+Besides, the "per base sequence content" was less biased:
+
+![](QC_trimmed/trimmed_base_content_heatmap.png)
+
+Each sample was more homogeneous.
+
+![](QC_trimmed/trimmed_base_content.png)
+
+Besides, other indicators, such as the "per base N content" and "per sequence
+GC content" performed better.
+
+
+## Pseudoaligment to reference genome
+
+Once the data was ready, we decided to generate count matrices using Kallisto
+
+First, we downloaded the latest 
+
+```
+for file in /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/*_1_trimmed.fastq.gz
+do
+    op=$(basename $file | cut -c-10 )         
+    file2=$(echo $file | sed 's/_1_/_2_/')  
+    mkdir /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/${op}                   
+    kallisto quant -i /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/Hs_ref.kidx \
+    -o /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/${op} \
+    --threads 40 $file $file2
+done
+```
+
+
+## Differencial Expresion Analysis
+
+
+
+
+
+# Results
+
+
+# Conclusions
+
+
+# References
+
+
+
+
+
+
+
