@@ -22,13 +22,13 @@ output:
 First of all, a new directory in the DNA High-Performance Computing Cluster
 was created, which is
 
-```
+```{bash directory, eval=FALSE}
 /mnt/Timina/bioinfoII/amarin/RNAseq2/
 ```
 
 This directory has the next organization:
 
-```
+```{bash structure, eval=FALSE}
 |-data/           # Directory to download the raw data
 |-data_trimmed/   # Directory to save the post-QC data
 |-kallisto_out/   # Directory to save the kallisto outputs
@@ -71,13 +71,13 @@ Then, we send a job using the script. It lasted around 5 days.
 Once the data is ready, we perform quality control. We just send a job using 
 fastqc with all the ```fastq``` files via a wildcard:
 
-```
+```{bash fastqc, eval=FALSE}
 fastqc /mnt/Timina/bioinfoII/amarin/RNAseq2/data/*fastq.gz -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC
 ```
 
 Then, we used multiqc to visualize all the samples at once:
 
-```
+```{bash multiqc, eval=FALSE}
 multiqc /mnt/Timina/bioinfoII/amarin/RNAseq2/QC -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC
 ```
 
@@ -104,7 +104,7 @@ to trimm the first 12 nucleotides of each pair.
 We send a job in the  ```//data/``` directory with a script using the software
 Trimmomatic:
 
-```
+```{bash trimming, eval=FALSE}
 for i in *_1.fastq.gz;
 	do echo
   	trimmomatic PE -threads 40 -phred33 -trimlog trim.log \
@@ -127,9 +127,11 @@ This job took a couple of days.
 
 Once the data was trimmed, we did one more time the quality control.
 
-```
-fastqc /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/*fastq.gz -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed
-multiqc /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed
+```{bash trimmed_qc, eval=FALSE}
+fastqc /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/*fastq.gz \
+  -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed
+multiqc /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed \
+  -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC_trimmed
 ```
 
 This time, the quality of the first pair bases was better.
@@ -154,12 +156,13 @@ Once the data was ready, we decided to generate count matrices using Kallisto
 
 First, we downloaded the latest 
 
-```
+```{bash pseudo, eval=FALSE}
 for file in /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/*_1_trimmed.fastq.gz
 do
     op=$(basename $file | cut -c-10 )         
     file2=$(echo $file | sed 's/_1_/_2_/')  
-    mkdir /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/${op}                   
+    mkdir /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/${op}
+    
     kallisto quant -i /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/Hs_ref.kidx \
     -o /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/${op} \
     --threads 40 $file $file2
