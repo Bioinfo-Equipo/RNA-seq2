@@ -1,0 +1,32 @@
+#!/bin/bash
+# Use current working directory
+#$ -cwd
+#
+# Join stdout and stderr
+#$ -j y
+#
+# Run job through bash shell
+#$ -S /bin/bash
+#
+#You can edit the scriptsince this line
+#
+# Your job name
+#$ -N qc
+#
+# Send an email after the job has finished
+#$ -m e
+#$ -M aefrainmp@protonmail.com
+#
+# If modules are needed, source modules environment (Do not delete the next line):
+. /etc/profile.d/modules.sh
+#
+# Add any modules you might require:
+module load fastqc/0.11.3
+multiqc/1.5
+#
+# Write your commands in the next line
+fastqc /mnt/Timina/bioinfoII/amarin/RNAseq2/data/*fastq.gz -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC
+multiqc /mnt/Timina/bioinfoII/amarin/RNAseq2/QC -o /mnt/Timina/bioinfoII/amarin/RNAseq2/QC
+
+
+

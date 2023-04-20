@@ -1,0 +1,19 @@
+# Use current working directory
+#$ -cwd
+#
+# Join stdout and stderr
+#$ -j y
+#
+# Run job through bash shell
+#$ -S /bin/bash
+#
+#You can edit the scriptsince this line
+#
+# Your job name
+#$ -N download
+#
+# Send an email after the job has finished
+#$ -m e
+#$ -M aefrainmp@protonmail.com
+#
+./downloadScript.sh
