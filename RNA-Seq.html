@@ -1618,8 +1618,16 @@ sequence GC content” performed better.</p>
 <h2><span class="header-section-number">3.5</span> Pseudoaligment to
 reference genome</h2>
 <p>Once the data was ready, we decided to generate count matrices using
-Kallisto</p>
-<p>First, we downloaded the latest</p>
+Kallisto. To perform this, we first need a reference transcriptome. We
+choose the latest version available at <a href="https://www.gencodegenes.org/human/">GENCODE</a>, which is the
+release 43. The file was downloaded at the parent directory of this
+project:</p>
+<pre class="bash"><code>wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_43/gencode.v43.transcripts.fa.gz</code></pre>
+<p>Then, generated the kallisto index:</p>
+<pre class="bash"><code>kallisto index -i /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/Hs_ref.kidx \
+  /mnt/Timina/bioinfoII/amarin/RNAseq2/gencode.v43.transcripts.fa.gz</code></pre>
+<p>Then, we used a bash script to perform the quantification with all
+the samples.</p>
 <pre class="bash"><code>for file in /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/*_1_trimmed.fastq.gz
 do
     op=$(basename $file | cut -c-10 )         
@@ -1631,9 +1639,25 @@ do
     --threads 40 $file $file2
 done</code></pre>
 </div>
-<div id="differencial-expresion-analysis" class="section level2" number="3.6">
+<div id="differencial-expresion" class="section level2" number="3.6">
 <h2><span class="header-section-number">3.6</span> Differencial
-Expresion Analysis</h2>
+Expresion</h2>
+<div id="data-importation" class="section level3" number="3.6.1">
+<h3><span class="header-section-number">3.6.1</span> Data
+importation</h3>
+</div>
+<div id="exploratory-analysis" class="section level3" number="3.6.2">
+<h3><span class="header-section-number">3.6.2</span> Exploratory
+Analysis</h3>
+</div>
+<div id="differencial-expresion-analysis" class="section level3" number="3.6.3">
+<h3><span class="header-section-number">3.6.3</span> Differencial
+Expresion Analysis</h3>
+</div>
+</div>
+<div id="gene-ontology-enrichment" class="section level2" number="3.7">
+<h2><span class="header-section-number">3.7</span> Gene Ontology
+Enrichment</h2>
 </div>
 </div>
 <div id="results" class="section level1" number="4">

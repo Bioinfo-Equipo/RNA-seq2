@@ -152,9 +152,26 @@ GC content" performed better.
 
 ## Pseudoaligment to reference genome
 
-Once the data was ready, we decided to generate count matrices using Kallisto
+Once the data was ready, we decided to generate count matrices using Kallisto.
+To perform this, we first need a reference transcriptome. We choose the latest
+version available at 
+[GENCODE](https://www.gencodegenes.org/human/), which is the release 43.
+The file was downloaded at the parent directory of this project:
 
-First, we downloaded the latest 
+```{bash gencode, eval = FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_43/gencode.v43.transcripts.fa.gz
+```
+
+Then, generated the kallisto index:
+
+
+```{bash index, eval = FALSE}
+kallisto index -i /mnt/Timina/bioinfoII/amarin/RNAseq2/kallisto_out/Hs_ref.kidx \
+  /mnt/Timina/bioinfoII/amarin/RNAseq2/gencode.v43.transcripts.fa.gz
+```
+
+Then, we used a bash script to perform the quantification with all the samples.
+
 
 ```{bash pseudo, eval=FALSE}
 for file in /mnt/Timina/bioinfoII/amarin/RNAseq2/data_trimmed/*_1_trimmed.fastq.gz
@@ -170,7 +187,18 @@ done
 ```
 
 
-## Differencial Expresion Analysis
+## Differencial Expresion 
+
+### Data importation
+
+
+### Exploratory Analysis
+
+
+### Differencial Expresion Analysis
+
+
+## Gene Ontology Enrichment
 
 
 
