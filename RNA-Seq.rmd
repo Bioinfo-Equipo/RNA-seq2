@@ -189,7 +189,8 @@ done
 
 ## Differencial Expresion 
 
-For the differential expression analysis we used 
+For the differential expression analysis we used DESeq2, a Bioconductor package
+running on R 4.3.0 using a PC.
 
 ```{r libraries, message=FALSE, warning=FALSE, include=FALSE}
 library(tximport)
@@ -213,7 +214,8 @@ library(enrichplot)
 
 ### Data importation
 
-First, we imported the kallisto quantification tables to a local computer.
+First, we imported the kallisto quantification tables to a local computer
+from the DNA HPCC.
 Then, we created a tx2gene table, which maps annotated genes with transcripts.
 To do this, we used the Bioconductor package biomaRt.
 
@@ -265,10 +267,18 @@ dds = DESeqDataSetFromTximport(txi.kallisto.tsv,
 
 
 
-
-
-
 ### Exploratory Analysis
+
+Before doing some exploration analysis, we pre-filter low counts.
+
+```{r pre-filtering}
+## Pre-filtering
+
+keep = rowSums(counts(dds)) >= 10
+dds = dds[keep, ]
+```
+
+
 
 
 ### Differencial Expresion Analysis
