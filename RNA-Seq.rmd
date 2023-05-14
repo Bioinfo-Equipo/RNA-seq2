@@ -189,7 +189,83 @@ done
 
 ## Differencial Expresion 
 
+For the differential expression analysis we used 
+
+```{r libraries, message=FALSE, warning=FALSE, include=FALSE}
+library(tximport)
+library(tidyverse)
+library(DESeq2)
+library(ggplot2)
+library(ggrepel) # libreria que evita el overlap de texto en labels
+library(rhdf5)
+library(GenomicFeatures)
+library(dplyr)
+library(biomaRt)
+library(gprofiler2)
+library(ComplexHeatmap)
+library(genefilter)
+library(clusterProfiler)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(ggupset)
+library(enrichplot)
+```
+
 ### Data importation
+
+First, we imported the kallisto quantification tables to a local computer.
+Then, we created a tx2gene table, which maps annotated genes with transcripts.
+To do this, we used the Bioconductor package biomaRt.
+
+
+```{r ensembl, warning=FALSE, message = FALSE}
+ensembl = useEnsembl(biomart="ensembl", dataset="hsapiens_gene_ensembl")
+
+
+tx2gene = getBM(attributes=c('ensembl_transcript_id','ensembl_gene_id'), 
+                   mart = ensembl)
+```
+
+Next, we import the quantification table to the R environment. To do this, we
+use the Bioconductor package rhdf5
+
+```{r kallisto-import}
+## Paths to h5 archives
+files = file.path(list.dirs("./kallisto_data", recursive = FALSE),
+                  "abundance.h5")
+names(files) = str_extract(files, "SRR\\d+")
+
+## Importation
+txi.kallisto.tsv = tximport(files, type = "kallisto", tx2gene = tx2gene,
+                            ignoreAfterBar = TRUE, ignoreTxVersion=TRUE)
+
+
+head(txi.kallisto.tsv$counts)
+```
+
+
+Next, we create a metadata table to know the treatment for each SRA sample. 
+Since it wasn't available on SRA Run Selector web page, we needed to manually
+create it.
+
+```{r metadata}
+## Metadata importation to R
+meta = read.csv("./metadata.csv", header = FALSE)
+samples = column_to_rownames(meta, var = "V1")
+```
+
+Now, we create a DESeq2 dataset-like object, called DESeqDataSet, using the
+imported counts, sample names and metadata table.
+
+```{r dds}
+dds = DESeqDataSetFromTximport(txi.kallisto.tsv,
+                               colData = samples,
+                               design = ~V2)
+```
+
+
+
+
 
 
 ### Exploratory Analysis
@@ -213,6 +289,11 @@ done
 # References
 
 
+# Session Information
+
+```{r session-info}
+sessionInfo()
+```
 
 
 
