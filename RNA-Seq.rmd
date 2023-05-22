@@ -190,14 +190,15 @@ done
 ## Differencial Expresion 
 
 For the differential expression analysis we used DESeq2, a Bioconductor package
-running on R 4.3.0 using a PC.
+running on R 4.3.0 using a PC. The next, are the libraries to use.
 
-```{r libraries, message=FALSE, warning=FALSE, include=FALSE}
+```{r libraries}
+library(plotly)
 library(tximport)
 library(tidyverse)
 library(DESeq2)
 library(ggplot2)
-library(ggrepel) # libreria que evita el overlap de texto en labels
+library(ggrepel) 
 library(rhdf5)
 library(GenomicFeatures)
 library(dplyr)
@@ -276,12 +277,83 @@ Before doing some exploration analysis, we pre-filter low counts.
 
 keep = rowSums(counts(dds)) >= 10
 dds = dds[keep, ]
+
+## Factor level
+dds$V2 = factor(dds$V2, levels = c("Pre", "On"))
+```
+
+To identify if there's a batch effect, we graph a PCA; normalizing the data
+with the variance stabilizing transformation.
+
+```{r vst}
+vst = vst(dds, blind = FALSE)
+```
+
+Once we hve the normalized data, we graph a PCA.
+
+```{r pca, warning=FALSE}
+pca = prcomp(t(assay(vst)), rank. = 3)
+
+components = pca[["x"]]
+components = data.frame(components)
+
+var = summary(pca)[["importance"]]['Proportion of Variance',]
+var = 100*sum(var)
+
+fig = plot_ly(components, x = ~PC1, y = ~PC2, z = ~PC3, color = dds$V2)
+fig = fig %>% layout(title = "PCA")
+fig
+```
+
+As we can observe, there is not a visible cluster suggesting a batch effect.
+In fact, by some reason, almos all the samples cluster into a big cloud, 
+regardless to their treatment.
+
+
+### Differential Expression Analysis
+
+Once we know there are not batch effects in our data, we perform the Differential   
+Expression Analysis. 
+
+```{r DESeq}
+dds = DESeq(dds)
+```
+
+To consider significant genes, we will use a significance level of
+$\alpha=0.01$, and a log fold change expression greater than 1 or lower than -1.
+
+```{r res}
+res = results(dds, alpha = 0.01)
+
+## Significative genes
+resSig = subset(res, padj < 0.01)
+dim(resSig)
+```
+
+We have 80 significant genes. We can visualize them in a volcano plot.
+
+```{r volcano, message=FALSE}
+res.df = as.data.frame(res)
+
+## Add genes symbols
+res.df$symbols = mapIds(org.Hs.eg.db, keys = rownames(res.df),
+                        keytype = "ENSEMBL", column = "SYMBOL")
+
+
+### Up and down genes
+res.df$diffexpressed = "NO"
+res.df$diffexpressed[res.df$log2FoldChange > 1 & res.df$padj < 0.01] <- "UP"
+res.df$diffexpressed[res.df$log2FoldChange < -1 & res.df$padj < 0.01] <- "DOWN"
+
+
+
+ggplot(data = res.df, aes(x=log2FoldChange, y=-log10(padj), col=diffexpressed, label=symbols)) + 
+  geom_point() 
+
 ```
 
 
 
-
-### Differencial Expresion Analysis
 
 
 ## Gene Ontology Enrichment
