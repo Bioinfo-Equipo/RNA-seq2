@@ -209,7 +209,7 @@ library(genefilter)
 library(clusterProfiler)
 library(AnnotationDbi)
 library(org.Hs.eg.db)
-library(ggupset)
+#library(ggupset)
 library(enrichplot)
 ```
 
@@ -354,11 +354,23 @@ ggplot(data = res.df, aes(x=log2FoldChange, y=-log10(padj), col=diffexpressed, l
 
 
 
-
-
 ## Gene Ontology Enrichment
 
+To make the GO terms enrichment, we use the ```org.Hs.eg.db``` database, 
+containing the annotated genes from *Homo sapiens*. The ontology was made using
+the Biologicla Process (BP).
 
+```{r GO}
+genes = rownames(resSig[resSig$log2FoldChange >= 1, ])
+
+GO = enrichGO(gene = genes,
+              OrgDb = org.Hs.eg.db,
+              keyType = "ENSEMBL", 
+              ont = "BP")
+
+GO.df = as.data.frame(GO)
+head(GO.df)
+```
 
 
 
