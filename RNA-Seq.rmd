@@ -1,5 +1,5 @@
 ---
-title: "Reporte de Prácticas 1"
+title: "RNAseq: "
 author: Ramos Galguera Johana Itzel, Marín Peralta Alejandro Efraín, Talavera Cruz
   María Fernanda
 date: "`r Sys.Date()`"
@@ -192,7 +192,7 @@ done
 For the differential expression analysis we used DESeq2, a Bioconductor package
 running on R 4.3.0 using a PC. The next, are the libraries to use.
 
-```{r libraries}
+```{r libraries, warning=FALSE, message=FALSE}
 library(plotly)
 library(tximport)
 library(tidyverse)
@@ -230,7 +230,7 @@ tx2gene = getBM(attributes=c('ensembl_transcript_id','ensembl_gene_id'),
 ```
 
 Next, we import the quantification table to the R environment. To do this, we
-use the Bioconductor package rhdf5
+use the Bioconductor package rhdf5.
 
 ```{r kallisto-import}
 ## Paths to h5 archives
@@ -242,8 +242,6 @@ names(files) = str_extract(files, "SRR\\d+")
 txi.kallisto.tsv = tximport(files, type = "kallisto", tx2gene = tx2gene,
                             ignoreAfterBar = TRUE, ignoreTxVersion=TRUE)
 
-
-head(txi.kallisto.tsv$counts)
 ```
 
 
@@ -260,7 +258,7 @@ samples = column_to_rownames(meta, var = "V1")
 Now, we create a DESeq2 dataset-like object, called DESeqDataSet, using the
 imported counts, sample names and metadata table.
 
-```{r dds}
+```{r dds, warning=FALSE}
 dds = DESeqDataSetFromTximport(txi.kallisto.tsv,
                                colData = samples,
                                design = ~V2)
@@ -285,13 +283,13 @@ dds$V2 = factor(dds$V2, levels = c("Pre", "On"))
 To identify if there's a batch effect, we graph a PCA; normalizing the data
 with the variance stabilizing transformation.
 
-```{r vst}
+```{r vst, message=FALSE, warning=FALSE}
 vst = vst(dds, blind = FALSE)
 ```
 
-Once we hve the normalized data, we graph a PCA.
+Once we hve the normalized data, we graph a tridimensional and interactive PCA plot.
 
-```{r pca, warning=FALSE}
+```{r pca, warning=FALSE, message=FALSE}
 pca = prcomp(t(assay(vst)), rank. = 3)
 
 components = pca[["x"]]
@@ -312,10 +310,10 @@ regardless to their treatment.
 
 ### Differential Expression Analysis
 
-Once we know there are not batch effects in our data, we perform the Differential   
+Once we know there are not batch effects in our data, we perform the Differential
 Expression Analysis. 
 
-```{r DESeq}
+```{r DESeq, message=FALSE, warning=FALSE}
 dds = DESeq(dds)
 ```
 
@@ -332,7 +330,7 @@ dim(resSig)
 
 We have 80 significant genes. We can visualize them in a volcano plot.
 
-```{r volcano, message=FALSE}
+```{r volcano, message=FALSE, warning=FALSE}
 res.df = as.data.frame(res)
 
 ## Add genes symbols
@@ -352,15 +350,40 @@ ggplot(data = res.df, aes(x=log2FoldChange, y=-log10(padj), col=diffexpressed, l
 
 ```
 
+### Significant genes extraction
 
+Once we have identified the significant genes, we extract them in tsv files. One
+for the up-regulated ones, and another for the down-regulated ones.
+
+```{r sig-extract}
+
+## Up genes
+resSigUP = subset(resSig, log2FoldChange >= 1)
+resSigUP = cbind(rownames(resSigUP), resSigUP) # Converts rownames into first column
+colnames(resSigUP)[1] = "GENE_ID" # Adds name to first column
+
+write.table(resSigUP, file = "./DEG_results/UP_genes.tsv", quote = FALSE,
+            sep = "\t",row.names = FALSE)
+
+
+## Down genes
+resSigDOWN = subset(resSig, log2FoldChange <= -1)
+resSigDOWN = cbind(rownames(resSigDOWN), resSigDOWN)
+colnames(resSigDOWN)[1] = "GENE_ID"
+
+write.table(resSigDOWN, file = "./DEG_results/DOWN_genes.tsv", quote = FALSE,
+            sep = "\t",row.names = FALSE)
+```
+ 
+ We got 6 significant downregulated genes and 73 upregulated significant genes.
 
 ## Gene Ontology Enrichment
 
 To make the GO terms enrichment, we use the ```org.Hs.eg.db``` database, 
 containing the annotated genes from *Homo sapiens*. The ontology was made using
-the Biologicla Process (BP).
+the Biological Process (BP).
 
-```{r GO}
+```{r GO, warning=FALSE, message=FALSE}
 genes = rownames(resSig[resSig$log2FoldChange >= 1, ])
 
 GO = enrichGO(gene = genes,
@@ -369,9 +392,19 @@ GO = enrichGO(gene = genes,
               ont = "BP")
 
 GO.df = as.data.frame(GO)
-head(GO.df)
 ```
 
+### Gene-Concept Network
+
+We can visualize the enriched genes depending on their biological process.
+
+```{r network, warning=FALSE, eval=FALSE}
+GO2 = setReadable(GO, OrgDb = org.Hs.eg.db)
+
+cnetplot(GO2, node_label = "all",color_category='firebrick', 
+          color_gene='steelblue', showCategory = 10)
+```
+![](images/network.png)
 
 
 # Results
