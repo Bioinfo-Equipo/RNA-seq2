@@ -1,5 +1,5 @@
 ---
-title: "RNAseq: "
+title: "Replication of general RNAseq analysis of the response to Nivolumab immunotherapy in cases of advanced melanoma"
 author: Ramos Galguera Johana Itzel, Marín Peralta Alejandro Efraín, Talavera Cruz
   María Fernanda
 date: "`r Sys.Date()`"
@@ -15,7 +15,51 @@ output:
 
 # Abstract
 
+Tumor progression during immunotherapy treatment is a complex process that has 
+not yet been fully characterized due to multiple dynamic factors that can 
+influence it. For this reason, we decided to use data from BioProject 
+PRJNA356761, which corresponds to patients with advanced melanoma who had 
+experienced progression with ipilimumab or who had not received prior treatment 
+with ipilimumab, both before and after initiating treatment with nivolumab. The 
+tumors were examined using whole exome sequencing, transcriptome and/or T-cell 
+receptor (TCR) analysis.
+The results obtained provide us with evidence that Nivolumab treatment has better 
+efficacy in recognizing and targeting cancer cells, in our enrichment analysis we 
+observed that the most prominent genes are associated with acute inflammatory 
+response, acute phase response, humoral immune response, metabolic and catabolic processes. 
+Which makes sense considering the mechanisms of function of immunotherapies. In 
+the bioproject article they obtained similar results to ours, they reported 
+highly expressed genes related to the immune system, which makes sense 
+considering the mechanisms of function of immunotherapies.
+This suggests that the treatment is effective and confirms the replicability of 
+the analysis. The data provide information on the mechanism of action of 
+nivolumab, however we consider that further studies could be performed and the 
+sample size could be increased for a better understanding of the interactions of 
+this treatment.
+
 # Introduction
+
+Melanoma is a type of skin cancer that originates in pigment-producing cells 
+called melanocytes. Immunotherapy has been positioned as one of the most 
+effective treatments for this cancer, however access to these treatments is very 
+limited due to cost. In addition, some genomic profiles have been observed that 
+may favor or affect the response to treatments. In this case, we are analyzing 
+data from patients who were treated with immune checkpoints and for this type of 
+immunotherapy the mechanisms that modulate tumor evolution are not clear. 
+
+The genomic characteristics of a tumor may contribute to the response to 
+checkpoint blockade (Li, et al., 2022). High tumor mutation loads increase the 
+likelihood of generating immunogenic neoantigens, which facilitates the 
+recognition of a tumor as foreign and thus having a higher number of clonal 
+neoantigens elicits more effective immune responses (McGranahan, et al., 2016). 
+Characteristics of the tumor microenvironment have also been linked to the 
+response to checkpoint inhibitor therapy, primarily CD8+ T-cell infiltration.
+
+Understanding how activation of the immune system, through checkpoint inhibition, 
+affects tumor mutation and the tumor microenvironment (TME). In order to analyze 
+genomic changes that could contribute to the understanding of these dynamics, we 
+conducted a study of melanoma samples before and after treatment with nivolumab 
+(Nivo; an anti-PD-1 agent).
 
 # Methods
 
@@ -448,6 +492,15 @@ of the immunotherapy.
 
 # Conclusions
 
+In summary, the study showed that immunotherapy with Nivolumab improves the
+immune system's ability to target and fight cancer cells. Gene expression 
+analysis revealed changes in immune-related genes, inflammation, and metabolic 
+processes. The findings support the effectiveness of Nivolumab and provide 
+insights into its mechanism of action.
+En general, la importancia de estos hallazgos radica en avanzar en nuestro 
+conocimiento de la inmunoterapia, proporcionar información sobre los mecanismos 
+moleculares subyacentes a su efectividad y potencialmente guiar futuras 
+investigaciones y enfoques clínicos en el tratamiento del cáncer.
 
 # References
 
@@ -459,7 +512,9 @@ Hugo Becerril Gonzalez, Catharina Hagerling, & Werb, Z. (2018). Roles of the imm
 
 Anushruti Sarvaria, J. Alejandro Madrigal, & Saudemont, A. (2017). B cell regulation in cancer and anti-tumor immunity. 14(8), 662–674. https://doi.org/10.1038/cmi.2017.35
 
+Li, Y., Wang, Q., Chen, Y. et al. Somatic mutations in DCC are associated with genomic instability and favourable outcomes in melanoma patients treated with immune checkpoint inhibitors. Br J Cancer 127, 1411–1423 (2022). https://doi.org/10.1038/s41416-022-01921-4
 
+McGranahan N, Furness AJ, Rosenthal R, Ramskov S, Lyngaa R, Saini SK, Jamal-Hanjani M, Wilson GA, Birkbak NJ, Hiley CT, Watkins TB, Shafi S, Murugaesu N, Mitter R, Akarca AU, Linares J, Marafioti T, Henry JY, Van Allen EM, Miao D, Schilling B, Schadendorf D, Garraway LA, Makarov V, Rizvi NA, Snyder A, Hellmann MD, Merghoub T, Wolchok JD, Shukla SA, Wu CJ, Peggs KS, Chan TA, Hadrup SR, Quezada SA, Swanton C. Clonal neoantigens elicit T cell immunoreactivity and sensitivity to immune checkpoint blockade. Science. 2016 Mar 25;351(6280):1463-9. doi: 10.1126/science.aaf1490. Epub 2016 Mar 3. PMID: 26940869; PMCID: PMC4984254.
 
 # Session Information
 
