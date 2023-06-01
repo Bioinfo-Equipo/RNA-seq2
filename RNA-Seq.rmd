@@ -497,10 +497,8 @@ immune system's ability to target and fight cancer cells. Gene expression
 analysis revealed changes in immune-related genes, inflammation, and metabolic 
 processes. The findings support the effectiveness of Nivolumab and provide 
 insights into its mechanism of action.
-En general, la importancia de estos hallazgos radica en avanzar en nuestro 
-conocimiento de la inmunoterapia, proporcionar información sobre los mecanismos 
-moleculares subyacentes a su efectividad y potencialmente guiar futuras 
-investigaciones y enfoques clínicos en el tratamiento del cáncer.
+Overall, the importance of these findings lies in advancing our knowledge of immunotherapy, providing insights into the molecular 
+mechanisms underlying its effectiveness, and potentially guiding future research and clinical approaches in cancer treatment.
 
 # References
 
