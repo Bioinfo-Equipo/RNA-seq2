@@ -407,13 +407,58 @@ cnetplot(GO2, node_label = "all",color_category='firebrick',
 ![](images/network.png)
 
 
-# Results
+# Results and Discussion
 
+Our results provide evidence that the Immunotherapy with Nivolumab helps the immune 
+system recognize and attack cancer cells more effectively. In our differential gene 
+expression analysis we found that 6 of our significant genes were downregulated and 
+73 were upregulated in patients being treated with Nivolumab. We then performed a 
+Gene Ontology (GO) enrichment analysis to gain a better understanding of the functional 
+implications of our genes. This analysis show us that the enriched genes that we found 
+were associated with the acute inflammatory response, acute-phase response, humoral 
+immune response, metabolic and catabolic processes which makes sense as immunotherapies
+work by targeting specific proteins on immune cells and cancer cells that regulate 
+immune responses.
+
+Cancerous tumor cells have the ability to produce signals that cause inflammation. 
+Cancer can be affected by inflammation in both favorable and unfavorable ways. On one 
+hand, it might help to attract immune cells like neutrophils and macrophages that can 
+recognize and eliminate cancer cells.On the other hand, chronic inflammation can create 
+a tumor-promoting environment by promoting angiogenesis and tissue remodeling, which can 
+facilitate tumor growth and metastasis (Li, L. et al., 2020).
+
+The tumor or the host immune system's response to the tumor can both initiate the 
+acute-phase response in cancer (Hugo Becerril Gonzalez et al., 2018). Acute-phase protein 
+levels have been found to be higher in a variety of cancers. Acute-phase proteins can be 
+monitored as diagnostic or prognostic indicators in some malignancies.
+
+The humoral immune response can be modulated by tumor cells to evade immune surveillance. 
+Tumors may downregulate the expression of antigens recognized by antibodies or produce 
+factors that inhibit antibody production (Anushruti Sarvaria et al., 2017). However, in 
+some cases, the humoral immune response can contribute to anti-tumor immunity and be 
+harnessed for therapeutic purposes.
+
+In the the paper of the bioproject they mentioned that highly expressed genes were 
+immune-related, suggesting pre-existing immune recognition of the tumor. By comparing our 
+results with the paper we noticed that they had similar results as they also found 
+differentially expressed genes related to host immunity, which increased their expression and 
+with metabolism, which decreased their expression in responders. With this comparison, we can 
+be sure that our analysis was perform correctly and that our results are assuring the efficacy 
+of the immunotherapy.
 
 # Conclusions
 
 
 # References
+
+Li, L., Yu, R., Cai, T., Chen, Z., Lan, M., Zou, T., Wang, B., Wang, Q., Zhao, Y., & Cai, Y. (2020). Effects of immune cells and cytokines on inflammation and immunosuppression in the tumor microenvironment. 88, 106939–106939. https://doi.org/10.1016/j.intimp.2020.106939
+
+Zhao, H., Wu, L., Yan, G., Chen, Y., Zhou, M., Wu, Y., & Li, Y. (2021). Inflammation and tumor progression: signaling pathways and targeted intervention. 6(1). https://doi.org/10.1038/s41392-021-00658-5
+
+Hugo Becerril Gonzalez, Catharina Hagerling, & Werb, Z. (2018). Roles of the immune system in cancer: from tumor initiation to metastatic progression. 32(19-20), 1267–1284. https://doi.org/10.1101/gad.314617.118
+
+Anushruti Sarvaria, J. Alejandro Madrigal, & Saudemont, A. (2017). B cell regulation in cancer and anti-tumor immunity. 14(8), 662–674. https://doi.org/10.1038/cmi.2017.35
+
 
 
 # Session Information
